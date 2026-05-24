@@ -1,0 +1,49 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Local DynamoDB and data persistence
+.dynamodb/
+docker-data/
+
+# Go (Backend)
+/backend/main
+/backend/bin/
+/backend/tmp/
+/backend/vendor/
+/backend/coverage.out
+/backend/*.exe
+/backend/*.test
+
+# React/Vite (Frontend)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/*.local
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/.eslintcache
+
+# Python / AWS CDK (Infra)
+/infra/.venv/
+/infra/__pycache__/
+/infra/*.egg-info/
+/infra/.cdk.staging/
+/infra/cdk.out/
+/infra/.env

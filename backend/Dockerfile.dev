@@ -1,0 +1,15 @@
+FROM cosmtrek/air:latest
+
+WORKDIR /app
+
+# Copy dependency files
+COPY go.mod ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Run Air for hot reloading
+CMD ["air"]

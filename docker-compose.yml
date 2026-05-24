@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Database Service (DynamoDB Local)
+  kowa-db:
+    image: amazon/dynamodb-local:latest
+    container_name: kowa-db
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
+    volumes:
+      - dynamodb-data:/data
+    networks:
+      - kowa-network
+    restart: unless-stopped
+
+  # Backend Service (Go API with hot-reload via Air)
+  kowa-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: kowa-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DYNAMODB_ENDPOINT=http://kowa-db:8000
+      - DYNAMODB_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=localaccesskeyid
+      - AWS_SECRET_ACCESS_KEY=localsecretaccesskey
+      - JWT_SECRET=local_super_secret_jwt_key_12345!
+      - STORAGE_MODE=local
+      - STORAGE_LOCAL_PATH=/app/storage
+    depends_on:
+      - kowa-db
+    networks:
+      - kowa-network
+    restart: unless-stopped
+
+  # Frontend Service (React + Vite)
+  kowa-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: kowa-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    depends_on:
+      - kowa-backend
+    networks:
+      - kowa-network
+    restart: unless-stopped
+
+networks:
+  kowa-network:
+    driver: bridge
+
+volumes:
+  dynamodb-data:
+    driver: local
+  go-build-cache:
+    driver: local
